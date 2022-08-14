@@ -34,7 +34,7 @@ modded class CarScript
 	// (Client-side) Play the given horn sound effect ID
 	void PlayHornSound(int id)
 	{
-		m_CarHornSound = SEffectManager.PlaySoundOnObject("Zen_CarHorn_SoundSet" + id.ToString(), this);
+		m_CarHornSound = SEffectManager.PlaySound("Zen_CarHorn_SoundSet" + id.ToString(), GetFrontPointPosWS());
 		m_CarHornSound.SetSoundAutodestroy(true);
 	}
 
