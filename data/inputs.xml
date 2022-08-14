@@ -4,7 +4,7 @@
 		<actions>
 			<input name="UAZenCarHorn" loc="STR_ZenCarHornTxt" />
 		</actions>
-		<sorting name="zen" loc="zen_menu_carhorn">
+		<sorting name="ZEN" loc="ZEN">
 			<input name="UAZenCarHorn"/>
 		</sorting>
 	</inputs>
