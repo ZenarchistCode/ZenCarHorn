@@ -27,6 +27,9 @@ class ActionCarHorn : ActionInteractBase
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
+		if (!player || !player.IsAlive() || player.IsUnconscious())
+			return false;
+
 		HumanCommandVehicle vehCommand = player.GetCommand_Vehicle();
 
 		if (vehCommand)
@@ -39,14 +42,35 @@ class ActionCarHorn : ActionInteractBase
 				{
 					if (car.CrewMemberIndex(player) == DayZPlayerConstants.VEHICLESEAT_DRIVER)
 					{
-						return true;
+						// Perform action checks.
+						if (car.IsVitalCarBattery() || car.IsVitalTruckBattery())
+						{
+							EntityAI battery = null;
+
+							if (car.IsVitalCarBattery()) // Check for car battery.
+							{
+								battery = EntityAI.Cast(car.FindAttachmentBySlotName("CarBattery"));
+							}
+									
+							if (car.IsVitalTruckBattery()) // Check for truck battery.
+							{
+								battery = EntityAI.Cast(car.FindAttachmentBySlotName("TruckBattery"));
+							}
+
+							if (battery && !battery.IsRuined()) // If required battery exists, we can use the horn.
+							{
+								return true;
+							}
+						}
 					}
 				}
 			}
 		}
-		return false;
+
+		return false; // No battery, no horn. No horn, no ladies.
 	}
 
+	// When action is triggered on the server, we need to tell the car to sound the horn so that all players nearby can hear it.
 	override void OnExecuteServer(ActionData action_data)
 	{
 		HumanCommandVehicle vehCommand = action_data.m_Player.GetCommand_Vehicle();
